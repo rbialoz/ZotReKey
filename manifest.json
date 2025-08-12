@@ -18,7 +18,8 @@
   "applications": {
     "zotero": {
 	"id": "zotero-rename-with-key@example.com",
-	"strict_min_version": "7.9",
+	"update_url": "https://github.com/rbialoz/ZotReKey/README.md",
+	"strict_min_version": "7.0",
 	"strict_max_version": "9.9"
     }
   }
