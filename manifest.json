@@ -1,34 +1,25 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Zotero — Rename With Key",
   "version": "1.0.0",
-  "description": "Right-click an attachment and append its Zotero key to the filename.",
-  "applications": {
-    "gecko": {
-      "id": "zotero-rename-with-key@example.org",
-      "strict_min_version": "8.0"
-    }
-  },
+  "description": "Append Zotero key to attachment filenames.",
   "permissions": [
-    "contextMenus",
-    "activeTab",
-    "tabs"
+    "storage"
   ],
   "background": {
     "scripts": ["background.js"],
-    "persistent": true
+    "persistent": false
   },
-  "content_scripts": [
-    {
-      "matches": ["chrome://zotero/content/*"],
-      "js": ["content-bridge.js"],
-      "run_at": "document_end"
-    }
-  ],
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "zotero-rename-with-key@example.org",
-      "strict_min_version": "7.0"
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content-bridge.js"],
+    "run_at": "document_idle"
+  }],
+  "applications": {
+    "zotero": {
+	"id": "zotero-rename-with-key@example.com",
+	"strict_min_version": "7.9",
+	"strict_max_version": "9.9"
     }
   }
 }

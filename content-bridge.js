@@ -50,5 +50,17 @@
     }
   };
 
-  Zotero.debug('zrk: content bridge loaded (MV3)');
+  // Listen for background script messages
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'runRename') {
+      if (window.__zrk_runRename) {
+        window.__zrk_runRename();
+        sendResponse({status: 'running'});
+      } else {
+        sendResponse({status: 'function not available'});
+      }
+    }
+  });
+
+  Zotero.debug('zrk: content bridge loaded (MV2)');
 })();
