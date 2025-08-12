@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>zotero-rename-with-key@example.org</em:id>
+    <em:version>0.1</em:version>
+    <em:type>2</em:type>
+    <em:name>Zotero — Rename With Key</em:name>
+    <em:description>Right-click an attachment and append its Zotero key to the filename.</em:description>
+    <em:creator>Your Name</em:creator>
+    <!-- Target Zotero range: adjust if necessary -->
+    <em:targetApplication>
+      <Description>
+        <em:id>{a6a42f5e-8b79-4e1d-bc12-7fdd4f2a6a08}</em:id>
+        <em:minVersion>6.0</em:minVersion>
+        <em:maxVersion>99.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>

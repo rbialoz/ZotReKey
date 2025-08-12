@@ -1,0 +1,2 @@
+content zotero_rename_with_key chrome/content/
+overlay chrome://zotero/content/zotero.xul chrome://zotero_rename_with_key/content/overlay.xul

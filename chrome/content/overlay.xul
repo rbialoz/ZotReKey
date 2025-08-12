@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<overlay id="zotero-rename-with-key-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <!-- We will add the menuitem dynamically via JS on window load. -->
+  <script type="application/javascript" src="overlay.js" />
+</overlay>
