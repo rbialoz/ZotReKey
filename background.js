@@ -22,7 +22,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 		}
 	    }
 	});
-  } catch (e) {
-    console.error('zrk background error', e);
-  }
+    } catch (e) {
+	console.error('zrk background error', e);
+    }
 });
