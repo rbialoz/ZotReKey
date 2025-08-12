@@ -1,4 +1,8 @@
+console.log('zrk content bridge loaded');
 (function() {
+  // Guard: only run inside Zotero UI windows
+  if (!window.Zotero || !window.ZoteroPane) return;
+
   async function renameAttachmentWithKey(item) {
     if (!item || !item.isAttachment()) {
       Zotero.debug('zrk: not an attachment');
@@ -15,22 +19,21 @@
       let base = displayName.replace(/(\.[^.]*)$/, '');
       if (base.endsWith('_' + key)) return;
 
-      let newName = base + '_' + key + ext;
       let file = Zotero.File.pathToFile(filePath);
       if (!file.exists()) return;
 
       let parentDir = file.parent;
       let existing = parentDir.clone();
-      existing.append(newName);
+      existing.append(base + '_' + key + ext);
       if (existing.exists()) return;
 
-      file.moveTo(parentDir, newName);
+      file.moveTo(parentDir, base + '_' + key + ext);
       Zotero.Utilities.transaction(function() {
-        item.attachmentFilename = newName;
+        item.attachmentFilename = base + '_' + key + ext;
         item.saveTx();
       });
 
-      Zotero.debug('zrk: Renamed to ' + newName);
+      Zotero.debug('zrk: Renamed to ' + base + '_' + key + ext);
     } catch (e) {
       Zotero.debug('zrk: exception: ' + e);
     }
@@ -49,18 +52,6 @@
       Zotero.debug('zrk: __zrk_runRename error: ' + e);
     }
   };
-
-  // Listen for background script messages
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'runRename') {
-      if (window.__zrk_runRename) {
-        window.__zrk_runRename();
-        sendResponse({status: 'running'});
-      } else {
-        sendResponse({status: 'function not available'});
-      }
-    }
-  });
 
   Zotero.debug('zrk: content bridge loaded (MV2)');
 })();
