@@ -1,12 +1,12 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Zotero — Rename With Key",
   "version": "1.0.0",
   "description": "Right-click an attachment and append its Zotero key to the filename.",
   "applications": {
     "gecko": {
       "id": "zotero-rename-with-key@example.org",
-      "strict_min_version": "8.0"
+      "strict_min_version": "7.0"
     }
   },
   "permissions": [

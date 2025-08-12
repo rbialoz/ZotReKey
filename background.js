@@ -1,23 +1,26 @@
-browser.contextMenus.create({
-  id: "zrk-rename-with-key",
-  title: "Rename with Key",
-  contexts: ["all"]
-}, function() {
-  // created
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "zrk-rename-with-key",
+    title: "Rename with Key",
+    contexts: ["all"]
+  });
 });
 
-browser.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== 'zrk-rename-with-key') return;
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId !== "zrk-rename-with-key") return;
+
+  if (!tab || !tab.id) return;
 
   try {
-    // Execute the rename command inside the Zotero window (content script)
-    // We use executeScript on the active tab for the Zotero window.
-    let tabs = await browser.tabs.query({active: true, currentWindow: true});
-    if (!tabs || !tabs.length) return;
-    let t = tabs[0];
-
-    await browser.tabs.executeScript(t.id, {
-      code: 'window.__zrk_runRename && window.__zrk_runRename();'
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        if (typeof window.__zrk_runRename === 'function') {
+          window.__zrk_runRename();
+        } else {
+          console.warn('zrk: rename function not available in this context');
+        }
+      }
     });
   } catch (e) {
     console.error('zrk background error', e);
