@@ -1,2 +1,5 @@
 #!/bin/bash
-zip -r ../ZotReKey.xpi manifest.json background.js bootstrap.js startup.js icons/pencil.svg 
+rm ../ZotReKey.xpi 
+# zip -r ../ZotReKey.xpi manifest.json background.js icons/pencil.svg 
+zip -r ../ZotReKey.xpi manifest.json background.js bootstrap.js icons/pencil.svg 
+# zip -r ../ZotReKey.xpi manifest.json background.js install.rdf startup.js icons/pencil.svg 
