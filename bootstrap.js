@@ -38,7 +38,7 @@ function startup(data, reason) {
                 let file = Zotero.File.pathToFile(oldPath);
 		let key = item.key;
                 let oldName = file.leafName;
-                let newName = `${oldName}-${key}`;
+                let newName = `${oldName}-${key}.pdf`;
 
                 try {
                     file.leafName = newName;
