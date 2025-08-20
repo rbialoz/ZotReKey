@@ -1,4 +1,6 @@
-var { Services } = ChromeUtils.importESModule("resource://gre/modules/Services.jsm");
+// var { Services } = ChromeUtils.importESModule("resource://gre/modules/Services.jsm");
+// var { ExtensionParent } = ChromeUtils.importESModule("resource://gre/modules/ExtensionParent.jsm");
+
 
 function startup(data, reason) {
     const win = Services.wm.getMostRecentWindow("navigator:browser");
