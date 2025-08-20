@@ -1,4 +1,4 @@
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { Services } = ChromeUtils.importESModule("resource://gre/modules/Services.jsm");
 
 function startup(data, reason) {
     const win = Services.wm.getMostRecentWindow("navigator:browser");
@@ -30,30 +30,15 @@ function startup(data, reason) {
                 attachments = childIDs.map(id => Zotero.Items.get(id));
             }
 
-            // Get citation key from Better BibTeX (if available) or 'extra' field
-            let citationKey = "";
-            try {
-                citationKey = await Zotero.BetterBibTeX.KeyManager.get(item.id);
-            } catch (e) {
-                // fallback: look in extra field
-                let extra = item.getField("extra") || "";
-                let match = extra.match(/Citation Key:\s*(\S+)/);
-                if (match) citationKey = match[1];
-            }
-
-            if (!citationKey) {
-                Zotero.debug(`No citation key found for item ${item.id}`);
-                continue;
-            }
-
             // Rename each attachment file
             for (let att of attachments) {
                 let oldPath = att.getFilePath();
                 if (!oldPath) continue;
 
                 let file = Zotero.File.pathToFile(oldPath);
+		let key = item.key;
                 let oldName = file.leafName;
-                let newName = `${citationKey} - ${oldName}`;
+                let newName = `${oldName}-${key}`;
 
                 try {
                     file.leafName = newName;
@@ -70,7 +55,7 @@ function startup(data, reason) {
     const menu = doc.getElementById("zotero-itemmenu");
     const menuItem = doc.createXULElement("menuitem");
     menuItem.setAttribute("id", "zrk-rename");
-    menuItem.setAttribute("label", "Rename with Key");
+    menuItem.setAttribute("label", "Rename with Key (Menu)");
     menuItem.addEventListener("command", () => win.__zrk_runRename());
     menu.appendChild(menuItem);
 }

@@ -20,5 +20,11 @@
 	"strict_min_version": "7.0",
 	"strict_max_version": "9.9"
     }
+  },
+  "icons": {
+    "48": "icons/pencil.svg"
+  },
+  "background": {
+    "scripts": ["background.js"]
   }
 }

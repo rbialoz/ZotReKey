@@ -1,28 +1,60 @@
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: "rename-with-key",
-    title: "Rename attachment(s) with key",
-    contexts: ["all"]
+let hasSelection = false;
+
+// Function to enable/disable toolbar button
+function updateToolbarButton() {
+  browser.browserAction.setDisabled(!hasSelection);
+}
+
+// Create context menu item
+browser.contextMenus.create({
+  id: "rename-with-key",
+    title: "Rename with Key (context)",
+  contexts: ["all"],
+  enabled: hasSelection
+});
+
+// Function to update context menu item
+function updateContextMenu() {
+  browser.contextMenus.update("rename-with-key", {enabled: hasSelection});
+}
+
+// Listen for messages from content scripts (selection changes)
+browser.runtime.onMessage.addListener((message) => {
+  if (message.type === "selectionChanged") {
+    hasSelection = message.hasSelection;
+    updateToolbarButton();
+    updateContextMenu();
+  }
+});
+
+// Handle toolbar click
+browser.browserAction.onClicked.addListener(() => {
+  if (hasSelection) {
+    sendRenameCommand();
+  } else {
+    notifyNoSelection();
+  }
+});
+
+// Handle context menu click
+browser.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "rename-with-key") {
+    sendRenameCommand();
+  }
+});
+
+// Send rename command to content script
+function sendRenameCommand() {
+  browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+    browser.tabs.sendMessage(tabs[0].id, {type: "runRename"});
   });
-});
+}
 
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === "rename-with-key") return;
-
-    if (!tab || !tab.id) return;
-
-    try {
-	await chrome.scripting.executeScript({
-	    target: { tabId: tab.id },
-	    func: () => {
-		if (typeof window.__zrk_runRename === 'function') {
-		    window.__zrk_runRename();
-		} else {
-		    console.warn('zrk: rename function not available in this context');
-		}
-	    }
-	});
-    } catch (e) {
-	console.error('zrk background error', e);
-    }
-});
+// Notify if nothing is selected
+function notifyNoSelection() {
+  browser.notifications.create({
+    type: "basic",
+    title: "Zotero Rename",
+    message: "No items selected."
+  });
+}
