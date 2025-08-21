@@ -1,13 +1,34 @@
 // var { Services } = ChromeUtils.importESModule("resource://gre/modules/Services.jsm");
 // var { ExtensionParent } = ChromeUtils.importESModule("resource://gre/modules/ExtensionParent.jsm");
 
+if (!Zotero.ZotReKey) {
+    Zotero.ZotReKey = {};
+}
 
-function startup(data, reason) {
+function install(data, reason) {}
+
+function uninstall(data, reason) {}
+
+function shutdown(data, reason) {
+    if (reason === APP_SHUTDOWN) return;
+
     const win = Services.wm.getMostRecentWindow("navigator:browser");
     const doc = win.document;
 
+    const menuItem = doc.getElementById("zrk-rename");
+    if (menuItem) menuItem.remove();
+    delete win.__zrk_runRename;
+}
+
+function startup(data, reason) {
+
+//    Zotero.ZotReKey.runRename = async function() {
+    const win = Services.wm.getMostRecentWindow("navigator:browser");
+    const doc = win.document;
+    const ZoteroPane = win.ZoteroPane;
+    
     // Expose function to console
-    win.__zrk_runRename = async function() {
+    	win.__zrk_runRename = async function() {
         Zotero.debug("Running rename with key...");
 
         let zp = Zotero.getActiveZoteroPane();
@@ -38,9 +59,10 @@ function startup(data, reason) {
                 if (!oldPath) continue;
 
                 let file = Zotero.File.pathToFile(oldPath);
-		let key = item.key;
+		let key = att.key;
                 let oldName = file.leafName;
-		let baseName = oldName.replace(/\.pdf$/i, ""); // remove ending ".pdf" if present
+		// remove ending ".pdf" if present
+		let baseName = oldName.replace(/\.pdf$/i, "");
                 let newName = `${baseName}-${key}.pdf`;
 
                 try {
@@ -61,18 +83,25 @@ function startup(data, reason) {
     menuItem.setAttribute("label", "Rename with Key (Menu)");
     menuItem.addEventListener("command", () => win.__zrk_runRename());
     menu.appendChild(menuItem);
-}
 
-function shutdown(data, reason) {
-    if (reason === APP_SHUTDOWN) return;
 
+// -------------------------------
+// Tools menu entry (DOM injection)
+// -------------------------------
+function addToolsMenuItem() {
     const win = Services.wm.getMostRecentWindow("navigator:browser");
     const doc = win.document;
 
-    const menuItem = doc.getElementById("zrk-rename");
-    if (menuItem) menuItem.remove();
-    delete win.__zrk_runRename;
+    let toolsMenu = doc.getElementById("menu_ToolsPopup");
+    if (toolsMenu && !doc.getElementById("zrk-tools-menuitem")) {
+        let menuitem = doc.createXULElement("menuitem");
+        menuitem.setAttribute("id", "zrk-tools-menuitem");
+        menuitem.setAttribute("label", "Rename with Key");
+        menuitem.addEventListener("command", () => win.__zrk_runRename());
+        toolsMenu.appendChild(menuitem);
+    }
 }
 
-function install(data, reason) {}
-function uninstall(data, reason) {}
+    addToolsMenuItem();
+}
+
