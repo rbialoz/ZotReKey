@@ -40,7 +40,8 @@ function startup(data, reason) {
                 let file = Zotero.File.pathToFile(oldPath);
 		let key = item.key;
                 let oldName = file.leafName;
-                let newName = `${oldName}-${key}.pdf`;
+		let baseName = oldName.replace(/\.pdf$/i, ""); // remove ending ".pdf" if present
+                let newName = `${baseName}-${key}.pdf`;
 
                 try {
                     file.leafName = newName;
