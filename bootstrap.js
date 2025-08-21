@@ -55,16 +55,16 @@ function startup(data, reason) {
 
             for (let att of attachments) {
 		// Rename each attachment file
-		win.__zrk_runRenameAttachment(att);
+		win.__zrk_runRenameAttachment(item, att);
 	    }
         }
     };
 
-    win.__zrk_runRenameAttachment = async function(att) {
+    win.__zrk_runRenameAttachment = async function(item, att) {
 	if (!att.attachmentPath) return; // skip if no file
         let oldPath = att.getFilePath();
         let file = Zotero.File.pathToFile(oldPath);
-	let key = att.key;
+	let key = item.key;
         let oldName = file.leafName;
 	// remove ending ".pdf" if present
 	let baseName = oldName.replace(/\.pdf$/i, "");
@@ -112,7 +112,7 @@ function startup(data, reason) {
 
             for (let att of attachments) {
 		// Rename each attachment file
-		win.__zrk_runRenameAttachment(att);
+		win.__zrk_runRenameAttachment(item, att);
 	    }
 	}
     };

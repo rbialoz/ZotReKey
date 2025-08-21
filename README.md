@@ -11,15 +11,17 @@ Zotero — Rename With Key
 3. Restart Zotero.
 4. Right-click an attachment in your library and choose `Rename with Key`.
 
+
+## Version history
+
+### 0.2.0
+
+In this version I attach the unique identifier of the parent entry to the pdf attached to it. This way it is compatible with the 'VisualStudio-Zotero' output for a website. The latter should replace the literature page on Typo3 website of the NW-FVA.
+
 ## Notes & next steps:
 - This is intentionally minimal. It *does not* prompt for overwrite and skips files that already contain the key.
 - To make it more robust: add user prompts, support batch renames with progress, handle linked files in the storage directory (Zotero-managed storage), and offer an option to run automatically on import.
 
-If you'd like, I can:
-- package this as a .xpi for easier install,
-- implement a safer overwrite prompt,
-- add a Preferences panel for behavior (auto-append, on-import, naming template), or
-- convert it to a modern Zotero WebExtension-style plugin if required.
 
 ## Disclaimer
 
