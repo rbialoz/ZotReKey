@@ -20,6 +20,25 @@ function shutdown(data, reason) {
     delete win.__zrk_runRename;
 }
 
+function replaceUmlauts(string)
+{
+    value = string.toLowerCase();
+    value = value.replace(/ä/g, 'ae');
+    value = value.replace(/ö/g, 'oe');
+    value = value.replace(/ü/g, 'ue');
+    value = value.replace(/ß/g, 'ss');
+    value = value.replace(/é/g, 'e');
+    value = value.replace(/è/g, 'e');
+    value = value.replace(/á/g, 'a');
+    value = value.replace(/š/g, 's');
+    value = value.replace(/é/g, 'e');
+    value = value.replace(/é/g, 'e');
+    value = value.replace(/å/g, 'a');
+    value = value.replace(/&/g, '_');
+//    value = value.replace(/é/g, 'e');
+    return value;
+}
+
 function startup(data, reason) {
 
 //    Zotero.ZotReKey.runRename = async function() {
@@ -66,12 +85,14 @@ function startup(data, reason) {
         let file = Zotero.File.pathToFile(oldPath);
 	let key = item.key;
         let oldName = file.leafName;
+	let aoName = replaceUmlauts(oldName);
 	// remove ending ".pdf" if present
-	let baseName = oldName.replace(/\.pdf$/i, "");
-        let newName = `${baseName}-${key}.pdf`;
+	let baseName = aoName.replace(/\.pdf$/i, "");
+        // let newName = `${baseName}-${key}.pdf`;
+        let newName = aoName;
 	
         try {
-            file.leafName = newName;
+	    file.leafName = newName;
             await att.renameAttachmentFile(newName);
             Zotero.debug(`Renamed: ${oldName} → ${newName}`);
         } catch (err) {
