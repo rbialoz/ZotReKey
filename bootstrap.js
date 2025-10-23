@@ -34,7 +34,7 @@ function replaceUmlauts(string)
     value = value.replace(/é/g, 'e');
     value = value.replace(/é/g, 'e');
     value = value.replace(/å/g, 'a');
-    value = value.replace(/&/g, '_');
+    value = value.replace(/§/g, 'S');
 //    value = value.replace(/é/g, 'e');
     return value;
 }
@@ -48,7 +48,7 @@ function startup(data, reason) {
     
     // Expose function to console
     win.__zrk_runRename = async function() {
-        Zotero.debug("Running rename with key...");
+        Zotero.debug("Running rename UR conform...");
 	
         let zp = Zotero.getActiveZoteroPane();
         if (!zp) {
@@ -101,7 +101,7 @@ function startup(data, reason) {
     };
 
     win.__zrk_runRenameCollection = async function() {
-        Zotero.debug("Running rename with key...");
+        Zotero.debug("Running rename UR conform...");
 	
         let zp = Zotero.getActiveZoteroPane();
         if (!zp) {
@@ -111,13 +111,13 @@ function startup(data, reason) {
 
 	const collection = ZoteroPane.getSelectedCollection();
 	if (!collection) {
-            Services.prompt.alert(win, "Rename with Key Collection", "No collection selected.");
+            Services.prompt.alert(win, "Rename UR conform Collection", "No collection selected.");
             return;
 	}
 
 	const items = collection.getChildItems();
 	if (!items.length) {
-            Services.prompt.alert(win, "Rename with Key Collection", "Collection has no items.");
+            Services.prompt.alert(win, "Rename UR conform Collection", "Collection has no items.");
             return;
 	}
 	
@@ -142,7 +142,7 @@ function startup(data, reason) {
     const menu = doc.getElementById("zotero-itemmenu");
     const menuItem = doc.createXULElement("menuitem");
     menuItem.setAttribute("id", "zrk-rename");
-    menuItem.setAttribute("label", "Rename with Key (Menu)");
+    menuItem.setAttribute("label", "Rename UR conform"); // Popup Menue
     menuItem.addEventListener("command", () => win.__zrk_runRename());
     menu.appendChild(menuItem);
 
@@ -158,7 +158,7 @@ function startup(data, reason) {
 	if (toolsMenu && !doc.getElementById("zrk-tools-menuitem")) {
             let menuitem = doc.createXULElement("menuitem");
             menuitem.setAttribute("id", "zrk-tools-ren-att");
-            menuitem.setAttribute("label", "Rename with Key (Tools)");
+            menuitem.setAttribute("label", "Rename UR conform - Single");
             menuitem.addEventListener("command", () => win.__zrk_runRename());
             toolsMenu.appendChild(menuitem);
 	}
@@ -176,7 +176,7 @@ function startup(data, reason) {
 	if (toolsMenu && !doc.getElementById("zrk-tools-menuitem")) {
             let menuitem = doc.createXULElement("menuitem");
             menuitem.setAttribute("id", "zrk-tools-ren-att-col");
-            menuitem.setAttribute("label", "Rename with Key Collection");
+            menuitem.setAttribute("label", "Rename UR conform - Collection");
             menuitem.addEventListener("command", () => win.__zrk_runRenameCollection());
             toolsMenu.appendChild(menuitem);
 	}
