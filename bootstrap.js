@@ -18,6 +18,10 @@ function shutdown(data, reason) {
     const menuItem = doc.getElementById("zrk-rename");
     if (menuItem) menuItem.remove();
     delete win.__zrk_runRename;
+    delete win.__zrk_runRenameAttachment;
+    delete win.__zrk_runRenameCollection;
+    delete win.__zrk_chooseAndStoreDestination;
+    delete win.__zrk_getStoredDestination;
 }
 
 function replaceUmlauts(string)
@@ -99,8 +103,21 @@ function startup(data, reason) {
         } catch (err) {
             Zotero.debug(`Failed to rename ${oldName}: ${err}`);
         }
+	// to copy the file to the specied directory
+	let destDir = await win.__zrk_getStoredDestination();
+	if (!destDir) {
+	    // Ask user if no stored folder yet
+	    destDir = await win.__zrk_chooseAndStoreDestination();
+	    if (!destDir) return; // user cancelled
+	} else {
+	    destDir = new FileUtils.File(destDir.path || destDir); // normalize
+	}
+	const srcFile = new FileUtils.File(att.getFilePath());
+	const destFile = destDir.clone();
+	destFile.append(newName);
+	srcFile.copyTo(destDir, destFile.leafName);
     };
-
+    
     win.__zrk_runRenameCollection = async function() {
         Zotero.debug("Running rename UR conform...");
 	
@@ -121,7 +138,7 @@ function startup(data, reason) {
             Services.prompt.alert(win, "Rename UR conform Collection", "Collection has no items.");
             return;
 	}
-	
+
 	for (let item of items) {
             // We only rename attachments; if parent item, find attachments
             let attachments = [];
@@ -138,7 +155,67 @@ function startup(data, reason) {
 	    }
 	}
     };
-    
+	
+    // Helper to pick and remember the folder
+    // Add this function to your main script
+    // (where your other helper functions live):
+    win.__zrk_chooseAndStoreDestination = async function () {
+	try {
+	    // Get a valid Zotero chrome window
+	    let win = Services.wm.getMostRecentWindow("navigator:browser");
+	    if (!win) {
+		// Fallback for Zotero 8 beta builds
+		const enumerator = Services.wm.getEnumerator(null);
+		while (enumerator.hasMoreElements()) {
+		    const nextWin = enumerator.getNext();
+		    if (nextWin.document.documentURI?.includes("zotero")) {
+			win = nextWin;
+			break;
+		    }
+		}
+	    }
+	    
+	    if (!win) {
+		Zotero.alert(null, "ZotReKey", "Could not locate a Zotero window to show the dialog.");
+		return null;
+	    }
+	    // Create the native file picker
+	    // const win = Services.wm.getMostRecentWindow("navigator:browser");
+	    const picker = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+	    
+	    picker.init(win, "Select destination folder", Ci.nsIFilePicker.modeGetFolder);
+	    const rv = picker.show();
+	    
+	    if (rv === Ci.nsIFilePicker.returnOK || rv === Ci.nsIFilePicker.returnReplace) {
+		const destDir = picker.file;
+		const destPath = destDir.path;
+		
+		// Store the chosen path for reuse
+		Zotero.Prefs.set("extensions.zotrekey.destDir", destPath);
+		
+		Zotero.alert(win, "ZotReKey", `Destination folder set to:\n${destPath}`);
+		return destDir;
+	    } else {
+		Zotero.alert(win, "ZotReKey", "Folder selection cancelled.");
+		return null;
+	    }
+	} catch (e) {
+	    Zotero.debug("ZotReKey.chooseAndStoreDestination error: " + e);
+	    Zotero.alert(null, "ZotReKey Error", e);
+	    return null;
+	}
+    };
+
+    // Helper to load the stored folder
+    win.__zrk_getStoredDestination = async function () {
+	const destDir = await Zotero.Prefs.get("extensions.zotrekey.destDir", null);
+	if (destDir) {
+            const dirFile = new FileUtils.File(destDir);
+            if (dirFile.exists() && dirFile.isDirectory()) return dirFile;
+	}
+	return null;
+    };
+
     // Add context menu entry
     const menu = doc.getElementById("zotero-itemmenu");
     const menuItem = doc.createXULElement("menuitem");
@@ -184,5 +261,50 @@ function startup(data, reason) {
     }
     addToolsRenameCollectionAttachment();
 
+    // --------------------------------
+    // Menu entry under Tools selecting the destination path
+    // --------------------------------
+    function addToolsSelectDestinationPath() {
+	const win = Services.wm.getMostRecentWindow("navigator:browser");
+	const ZoteroPane = win.ZoteroPane;
+	
+	let toolsMenu = doc.getElementById("menu_ToolsPopup");
+	if (toolsMenu && !doc.getElementById("zrk-tools-menuitem")) {
+            let menuitem = doc.createXULElement("menuitem");
+            menuitem.setAttribute("id", "zrk-tools-set-dest-path");
+            menuitem.setAttribute("label", "Set destination path");
+	    menuitem.addEventListener("command", () => win.__zrk_chooseAndStoreDestination());
+	    // menuitem.addEventListener("command", () => zotReKey_chooseAndStoreDestination() );
+            toolsMenu.appendChild(menuitem);
+	}
+    }
+    addToolsSelectDestinationPath();
 }
 
+async function zotReKey_chooseAndStoreDestination() {
+    try {
+	const win = Services.wm.getMostRecentWindow("navigator:browser");
+	const picker = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+	
+	picker.init(win, "Select destination folder", Ci.nsIFilePicker.modeGetFolder);
+	const rv = picker.show();
+	
+	if (rv === Ci.nsIFilePicker.returnOK || rv === Ci.nsIFilePicker.returnReplace) {
+	    const destDir = picker.file;
+	    const destPath = destDir.path;
+	    
+	    // Store the chosen path for reuse
+	    Zotero.Prefs.set("extensions.zotrekey.destDir", destPath);
+	    
+	    Zotero.alert(win, "ZotReKey", `Destination folder set to:\n${destPath}`);
+	    return destDir;
+	} else {
+	    Zotero.alert(win, "ZotReKey", "Folder selection cancelled.");
+	    return null;
+	}
+    } catch (e) {
+	Zotero.debug("ZotReKey.chooseAndStoreDestination error: " + e);
+	Zotero.alert(null, "ZotReKey Error", e);
+	return null;
+    }
+}
