@@ -34,6 +34,7 @@ function replaceUmlauts(string)
     value = value.replace(/é/g, 'e');
     value = value.replace(/é/g, 'e');
     value = value.replace(/å/g, 'a');
+    value = value.replace(/_&_/g, '_');
     value = value.replace(/§/g, 'S');
 //    value = value.replace(/é/g, 'e');
     return value;

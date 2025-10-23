@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Zotero — Rename With Key",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Append Zotero key to attachment filenames.",
   "permissions": ["scripting"],
   "background": {
