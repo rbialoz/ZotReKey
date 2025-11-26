@@ -105,7 +105,7 @@ function startup(data, reason) {
             Zotero.debug(`Failed to rename ${oldName}: ${err}`);
         }
 	// to copy the file to the specied directory
-/*	let destDir = await win.__zrk_getStoredDestination();
+	let destDir = await win.__zrk_getStoredDestination();
 	if (!destDir) {
 	    // Ask user if no stored folder yet
 	    destDir = await win.__zrk_chooseAndStoreDestination();
@@ -117,8 +117,7 @@ function startup(data, reason) {
 	const destFile = destDir.clone();
 	destFile.append(newName);
 	srcFile.copyTo(destDir, destFile.leafName);
-*/
-	};
+    };
     
     win.__zrk_runRenameCollection = async function() {
         Zotero.debug("Running rename UR conform...");
@@ -266,7 +265,7 @@ function startup(data, reason) {
     // --------------------------------
     // Menu entry under Tools selecting the destination path
     // --------------------------------
-/*    function addToolsSelectDestinationPath() {
+    function addToolsSelectDestinationPath() {
 	const win = Services.wm.getMostRecentWindow("navigator:browser");
 	const ZoteroPane = win.ZoteroPane;
 	
@@ -281,7 +280,6 @@ function startup(data, reason) {
 	}
     }
     addToolsSelectDestinationPath();
-*/
 }
 
 async function zotReKey_chooseAndStoreDestination() {
