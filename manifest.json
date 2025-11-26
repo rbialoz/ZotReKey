@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Zotero — Rename With Key",
-  "version": "0.3.0",
-  "description": "Append Zotero key to attachment filenames.",
+  "version": "0.3.1",
+  "description": "Rename the attachment filename to make it URL conform for Typo3 and append the Zotero storage directory name as an unique key to attachment filename.",
   "permissions": ["scripting"],
   "background": {
     "scripts": ["background.js"],

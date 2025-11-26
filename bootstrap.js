@@ -88,13 +88,14 @@ function startup(data, reason) {
 	if (!att.attachmentPath) return; // skip if no file
         let oldPath = att.getFilePath();
         let file = Zotero.File.pathToFile(oldPath);
-	let key = item.key;
+	// let key = item.key; // the key from the file (where from?)
+	let key = att.key; // the key from the path (path name under storage)
         let oldName = file.leafName;
 	let aoName = replaceUmlauts(oldName);
 	// remove ending ".pdf" if present
 	let baseName = aoName.replace(/\.pdf$/i, "");
-        // let newName = `${baseName}-${key}.pdf`;
-        let newName = aoName;
+        let newName = `${baseName}-${key}.pdf`;
+        // let newName = aoName;
 	
         try {
 	    file.leafName = newName;
@@ -104,7 +105,7 @@ function startup(data, reason) {
             Zotero.debug(`Failed to rename ${oldName}: ${err}`);
         }
 	// to copy the file to the specied directory
-	let destDir = await win.__zrk_getStoredDestination();
+/*	let destDir = await win.__zrk_getStoredDestination();
 	if (!destDir) {
 	    // Ask user if no stored folder yet
 	    destDir = await win.__zrk_chooseAndStoreDestination();
@@ -116,7 +117,8 @@ function startup(data, reason) {
 	const destFile = destDir.clone();
 	destFile.append(newName);
 	srcFile.copyTo(destDir, destFile.leafName);
-    };
+*/
+	};
     
     win.__zrk_runRenameCollection = async function() {
         Zotero.debug("Running rename UR conform...");
@@ -264,7 +266,7 @@ function startup(data, reason) {
     // --------------------------------
     // Menu entry under Tools selecting the destination path
     // --------------------------------
-    function addToolsSelectDestinationPath() {
+/*    function addToolsSelectDestinationPath() {
 	const win = Services.wm.getMostRecentWindow("navigator:browser");
 	const ZoteroPane = win.ZoteroPane;
 	
@@ -279,6 +281,7 @@ function startup(data, reason) {
 	}
     }
     addToolsSelectDestinationPath();
+*/
 }
 
 async function zotReKey_chooseAndStoreDestination() {

@@ -2,7 +2,7 @@
 
 Zotero — Rename With Key
 
-The plugin is in version 0.3.0 changed to not append the identifier key at the end of the filename of the attachment. This can be changed later on if needed.
+The plugin has been updated to append the identifier key to the end of the attachment filename. 
 
 ## Installation (development/test):
 
@@ -17,18 +17,22 @@ The plugin is in version 0.3.0 changed to not append the identifier key at the e
 
 ## Version history
 
+### 0.3.1
+
+To the name of the attachment file the directory name of attachment in the storage folder of zotero is appended to create unique filenames even in cases when the first 50 characters of the title are still the same. The current file still have some code (commented out), which should be used for moving the attached file to a specific directpory. 
+
 ### 0.3.0
 
-Since it is used now as a rename tool to make filenames UR conform, the attachment of the key is removed (commented out) and a change of lots of special characters (not all) are converted to other characters. Especially for the Umlauts. Therefor the menue entries are also changed to "UR conform". The `&` is just removed and replaced by a singel `_`.
+Since it is now being used as a renaming tool to make filenames UR-conformant, the attachment of the key has been removed (i.e. commented out), and lots of special characters have been converted to other characters (though not all of them). This is especially the case for umlauts. Therefore, the menu entries are also changed to 'UR-conform'. The '&' is simply removed and replaced with a single underscore.
 
 ### 0.2.0
 
 In this version I attach the unique identifier of the parent entry to the pdf attached to it. This way it is compatible with the 'VisualStudio-Zotero' output for a website. The latter should replace the literature page on Typo3 website of the NW-FVA.
 
 ## Notes & next steps:
+
 - This is intentionally minimal. It *does not* prompt for overwrite and skips files that already contain the key.
 - To make it more robust: add user prompts, support batch renames with progress, handle linked files in the storage directory (Zotero-managed storage), and offer an option to run automatically on import.
-
 
 ## Disclaimer
 
