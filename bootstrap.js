@@ -40,6 +40,10 @@ function replaceUmlauts(string)
     value = value.replace(/å/g, 'a');
     value = value.replace(/_&_/g, '_');
     value = value.replace(/§/g, 'S');
+    value = value.replace(/,_/g, '_');
+    value = value.replace(/:_/g, '_');
+    value = value.replace(/;_/g, '_');
+    value = value.replace(/_\./g, '\.');
 //    value = value.replace(/é/g, 'e');
     return value;
 }
