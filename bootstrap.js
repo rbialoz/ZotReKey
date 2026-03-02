@@ -44,6 +44,7 @@ function replaceUmlauts(string)
     value = value.replace(/:_/g, '_');
     value = value.replace(/;_/g, '_');
     value = value.replace(/_\./g, '\.');
+    value = value.replace(/\'/g, '');
 //    value = value.replace(/é/g, 'e');
     return value;
 }
