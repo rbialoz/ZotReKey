@@ -40,6 +40,11 @@ function replaceUmlauts(string)
     value = value.replace(/å/g, 'a');
     value = value.replace(/_&_/g, '_');
     value = value.replace(/§/g, 'S');
+    value = value.replace(/,_/g, '_');
+    value = value.replace(/:_/g, '_');
+    value = value.replace(/;_/g, '_');
+    value = value.replace(/_\./g, '\.');
+    value = value.replace(/\'/g, '');
 //    value = value.replace(/é/g, 'e');
     return value;
 }
@@ -104,8 +109,8 @@ function startup(data, reason) {
         } catch (err) {
             Zotero.debug(`Failed to rename ${oldName}: ${err}`);
         }
-	// to copy the file to the specied directory
-	let destDir = await win.__zrk_getStoredDestination();
+	// to copy the file to the specified directory
+/*	let destDir = await win.__zrk_getStoredDestination();
 	if (!destDir) {
 	    // Ask user if no stored folder yet
 	    destDir = await win.__zrk_chooseAndStoreDestination();
@@ -280,6 +285,7 @@ function startup(data, reason) {
 	}
     }
     addToolsSelectDestinationPath();
+*/
 }
 
 async function zotReKey_chooseAndStoreDestination() {
