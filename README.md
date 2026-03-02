@@ -17,6 +17,10 @@ The plugin has been updated to append the identifier key to the end of the attac
 
 ## Version history
 
+### 0.3.2
+
+The rename of the attachment does now also remove ",", ";" and ":" from any part of the filename. This has been necessary because several ministries do have these in their names and in case their name is used because there is not author stated, it became part of the filename (e.g. Title: "Wald wirkt. Vierte Bundeswaldinventur (BWI 2024)"). 
+
 ### 0.3.1
 
 To the name of the attachment file the directory name of attachment in the storage folder of zotero is appended to create unique filenames even in cases when the first 50 characters of the title are still the same. The current file still have some code (commented out), which should be used for moving the attached file to a specific directory. 
